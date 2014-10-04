@@ -9,7 +9,28 @@ Each move is of the form "f to t", where f at t are integers
 representing the movement of bins in locations
 f and f+1 to locations t and t+1.
 If multiple solutions are possible, display any one of them.
+
+Note: It's not clear what should be printed in case of a swapping 
+from positions f+1 => t and f => t+1. 
+
+This solution assumes we can print f and t in such cases as an alternate path.
 """
+
+
+def pre_pattern(positions, n, moves):
+	positions[2*n-2], positions[2*n-1] = positions[4*n-3], positions[4*n-2]
+	positions[4*n-3], positions[4*n-2] = '', ''
+	moves.append((4*n-3, 2*n-2))
+	positions[4*n-3], positions[4*n-2] = positions[2*n+2], positions[2*n+3]
+	positions[2*n+2], positions[2*n+3] = '', ''
+	moves.append((2*n+2, 4*n-3))
+	return [positions, moves]
+
+def post_pattern(positions, n, moves):
+	positions[2*n], positions[2*n-1] = positions[4*n-1], positions[4*n-2]
+	positions[4*n-1], positions[4*n-2] = '', ''
+	moves.append((4*n-2, 2*n-1))
+	return [positions, moves]
 
 # n = int(raw_input())
 def baggage_solver(n):
@@ -37,27 +58,40 @@ def baggage_solver(n):
 		astring = ''.join(string_list)
 		moves = []
 		if n == 4:
-			positions[2*n-2], positions[2*n-1] = positions[4*n-3], positions[4*n-2]
-			positions[4*n-3], positions[4*n-2] = '', ''
-			moves.append((4*n-3, 2*n-2))
-			positions[4*n-3], positions[4*n-2] = positions[4*n-6], positions[4*n-5]
-			positions[4*n-5], positions[4*n-6] = '', ''
-			moves.append((4*n-6, 4*n-3))
-			# ABBA()BBAA pattern created
+			pp = pre_pattern(positions, n, moves)
+			positions = pp[0]
+			moves = pp[1]
+			# special step for n == 4
 			positions[2*n+2], positions[2*n+3] = positions[2*n], positions[2*n-1]
 			positions[2*n], positions[2*n-1] = '', ''
 			moves.append((2*n, 2*n+2))
 			positions[2*n], positions[2*n-1] = positions[4*n-1], positions[4*n-2]
 			positions[4*n-1], positions[4*n-2] = '', ''
-			moves.append((4*n-1, 2*n))
+			moves.append((4*n-1, 2*n-1))
 			for m in moves:
 				print m[0]-2*n+1, " to ", m[1]-2*n+1
-
-
+		if n == 5:
+			pp = pre_pattern(positions, n, moves)
+			positions = pp[0]
+			moves = pp[1]
+			# special step for n == 5
+			positions[2*n+2], positions[2*n+3] = positions[2*n+5], positions[2*n+4]
+			positions[2*n+4], positions[2*n+5] = '', ''
+			moves.append((2*n+4, 2*n+2))
+			positions[2*n+4], positions[2*n+5] = positions[2*n], positions[2*n-1]
+			positions[2*n], positions[2*n-1] = '', ''
+			moves.append((2*n-1, 2*n+4))
+			pp = post_pattern(positions, n, moves)
+			positions = pp[0]
+			moves = pp[1]
+			for m in moves:
+				print m[0]-2*n+1, " to ", m[1]-2*n+1
 
 	if n == 3:
 		# special case solution for n == 3, as it goes until index -3.
 		pass
 
-
+print "for n == 4"
 baggage_solver(4)
+print "for  n == 5"
+baggage_solver(5)
