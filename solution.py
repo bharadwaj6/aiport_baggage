@@ -46,13 +46,13 @@ def baggage_solver(n):
 		if n == 4:
 			moves.append((2*n-2, -1))
 			moves.append((n-1, 2*n-2))
-			moves.append((-1, n-1))
-			moves.append((2*n-1,-1))
+			moves.append((0, n-1))
+			moves.append((2*n-1,0))
 		if n == 5:
 			moves.append((2*n-2, -1))
-			moves.append((n-1, 2*n-2))
-			moves.append((n+1, n-1))
-			moves.append((-1, n+1))
+			moves.append((n-2, 2*n-2))
+			moves.append((n, n-2))
+			moves.append((-1, n))
 			moves.append((2*n-1, -1))
 		if n == 6:
 			moves.append((2*n-2, -1))
